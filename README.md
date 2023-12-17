@@ -42,7 +42,7 @@ Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 pol
 * In order to take into account polar days/nights, the time widget behavior has been changed.
 * Transition between day and night is showed by the absence of sun/moon in the time widget.
 * In other words, the night/day ends when the moon/sun has completely disappeared on the right.
-* Therefore, the night/day starts when the moon/sun start to show up on the left.
+* Therefore, the night/day starts when the moon/sun starts to show up on the left.
   
 ![timewidget](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/009c50a1-0ee8-4825-8044-69e244da8897)
 
