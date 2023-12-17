@@ -43,13 +43,15 @@ Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 pol
 * Transition between day and night is showed by the absence of sun/moon in the time widget.
 * In other words, the night/day ends when the moon/sun has completely disappeared on the right.
 * Therefore, the night/day starts when the moon/sun start to show up on the left.
+  
+![timewidget](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/009c50a1-0ee8-4825-8044-69e244da8897)
 
 ### TEMPERATURE
 * The mod allows you to adjust the seasonal temperature gap if you want to (you can then keep vanilla temperatures which is already a challenge during winter)
 
 ### AURORA
 * Every things related to the day/night cycle (temperature, lights, aurora, glimmer fog, ...) is therefore impacted.
-* In the specific case of auroras, their frequencies are increased during equinoxes. In short, vanilla values during Winter/Summer, twice as much during Spring/Autumn.
+* In the specific case of auroras, their frequencies are increased during equinoxes. In short, vanilla values during Winter/Summer, twice as many during Spring/Autumn.
 
 ## USEFUL MOD COMBO
 
