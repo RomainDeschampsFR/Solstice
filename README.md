@@ -4,8 +4,10 @@
 * Meaning the days are shorter and colder during winter, longer and warmer during summer.
 * **Not compatible with RELENTLESS NIGHT**.
 
+![solstice](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/39e3e8ef-99d8-4c9c-940e-a9344c260c53)
+
 ### POLAR DAYS & POLAR NIGHTS
-* Above 65° latitude you'll get polar days & polar nights during your run.
+* Above 65Â° latitude you'll get polar days & polar nights during your run.
 * Based on realistic values, here are the number of polar days/nights for each latitude (using a 365-day cycle as a reference)
 
 Latitude --- Polar days --- Polar nights
