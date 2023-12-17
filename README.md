@@ -10,23 +10,25 @@
 * Above 65° latitude you'll get polar days & polar nights during your run.
 * Based on realistic values, here are the number of polar days/nights for each latitude (using a 365-day cycle as a reference)
 
-Latitude --- Polar days --- Polar nights
-65	 --- 	0	 --- 	0
-66	 --- 	18	 --- 	0
-67	 --- 	38	 --- 	0
-68	 --- 	52	 --- 	25
-69	 --- 	62	 --- 	41
-70	 --- 	72	 --- 	52
-71	 --- 	80	 --- 	62
-72	 --- 	88	 --- 	70
-73	 --- 	96	 --- 	78
-74	 --- 	102	 --- 	85
-75	 --- 	108	 --- 	92
-76	 --- 	115	 --- 	98
-77	 --- 	121	 --- 	104
-78	 --- 	127	 --- 	110
-79	 --- 	132	 --- 	116
-80	 --- 	138	 --- 	122
+Latitude	|	Polar days	|	Polar nights
+-------	|	-------	|	-------
+65	|	0	|	0
+66	|	18	|	0
+67	|	38	|	0
+68	|	52	|	25
+69	|	62	|	41
+70	|	72	|	52
+71	|	80	|	62
+72	|	88	|	70
+73	|	96	|	78
+74	|	102	|	85
+75	|	108	|	92
+76	|	115	|	98
+77	|	121	|	104
+78	|	127	|	110
+79	|	132	|	116
+80	|	138	|	122
+
 
 Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 polar nights in a row.
 
