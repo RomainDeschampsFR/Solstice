@@ -2,6 +2,7 @@
 * Mod originaly made by WulfMarius, improved in many ways by JoeBuckley and now ressurected.
 * It adds "seasons" into the game (Don't expect lush vegetation everywhere - it'll never happen...)
 * Meaning the days are shorter and colder during winter, longer and warmer during summer.
+* The greater the latitude, the longer the days in summer and the shorter in winter.
 * **Not compatible with RELENTLESS NIGHT**.
 
 ![solstice](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/39e3e8ef-99d8-4c9c-940e-a9344c260c53)
