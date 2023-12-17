@@ -38,12 +38,6 @@ namespace Solstice
                 SaveDataManager.reloadPending = true;
             }
             if (sceneName.Contains("SANDBOX")) MelonCoroutines.Start(SaveDataManager.LoadSolsticeParameters());
-            //REDECLARER LES VARIABLES AVEC SAVEGAMEMANAGER???
-            //GERER LE PROBLEME DE DELAI (baisser le temps d'attente)
-            //README
-            //GIT + MOD LIST
-            //MESSAGE POST
-            //MESSAGE TEST
         }
 
         internal static readonly Interpolator interpolator = new Interpolator();

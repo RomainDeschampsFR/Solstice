@@ -6,6 +6,11 @@
 * **Not compatible with RELENTLESS NIGHT**.
 
 ![solstice](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/39e3e8ef-99d8-4c9c-940e-a9344c260c53)
+### SETTINGS ARE SANDBOX SPECIFIC
+* Meaning saves (Old & New) aren't impacted by the mod
+* To apply the mod you need to be in a particular sandbox, make the changes and confirm (see console)
+* The settings will be loaded afterwards for this specific sandbox
+* You can disable the mod or update its settings in the current sandbox at anytime (try not to spam it, you might end up with some weird consequences (Although those consequences are very edge cases and not game-breaking)
 
 ### POLAR DAYS & POLAR NIGHTS
 * Above 65° latitude you'll get polar days & polar nights during your run.
@@ -32,6 +37,12 @@ Latitude	|	Polar days	|	Polar nights
 
 
 Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 polar nights in a row.
+
+### TIMEWIDGET UPDATED (Top right corner)
+* In order to take into account polar days/nights, the time widget behavior has been changed.
+* Transition between day and night is showed by the absence of sun/moon in the time widget.
+* In other words, the night/day ends when the moon/sun has completely disappeared on the right.
+* Therefore, the night/day starts when the moon/sun start to show up on the left.
 
 ### TEMPERATURE
 * The mod allows you to adjust the seasonal temperature gap if you want to (you can then keep vanilla temperatures which is already a challenge during winter)
