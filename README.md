@@ -35,6 +35,7 @@ Latitude	|	Polar days	|	Polar nights
 79	|	132	|	116
 80	|	138	|	122
 
+![latitude_DayLength](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/73d8a4bd-ac25-41a5-b8fc-f0430b19190d)
 
 Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 polar nights in a row.
 
@@ -59,7 +60,7 @@ Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 pol
 * Cozy Blankets (Jods) and Cozy Cushions (DZ) to get some more warmth bonus
 * Bedroll Tweaker (Cass) to be able to stack bedroll warmth
 * Darker Nights (Xpazeman) for an even harder experience during polar nights
-* Wolf Comes Out at night (Cass) for a weir experience where summer is safer and winter more dangerous
+* Wolf Comes Out at night (Cass) for a weird experience where summer is safer and winter more dangerous
 * Clothing tweaker (Waltz) might be useful although a good balance between winter and summer will be hard to find
 * Sun orientation fix (Cass), I need to have a look at it though)
 * Probably many more... I let you judge.
@@ -68,9 +69,9 @@ Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 pol
 
 * If you haven't done so already, install MelonLoader by downloading and running MelonLoader.Installer.exe.
 * Download the Solstice ZIP file containing 3 DLLs : 
-* Solstice.dll
-* Innovative.Geometry.Angle.dll
-* Innovative.SolarCalculator.dll
+  * Solstice.dll
+  * Innovative.Geometry.Angle.dll
+  * Innovative.SolarCalculator.dll
 * Move them **(The 3 of them!)** into the Mods folder in your TLD install directory.
 * ModSettings required
 * ModData required
