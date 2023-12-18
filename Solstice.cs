@@ -34,6 +34,21 @@ namespace Solstice
                 LatitudeTemp = 0;
                 SeasonalTempGap = 0;
                 TemperatureOffset = 0;
+
+                //UPDATE MOD SETTINGS UI TO AVOID CONFUSION (CHANGES ONLY ALLOWED IN SANDBOX)
+                Settings.settings.enabled = false;
+                Settings.settings.cycleLength = 365;
+                Settings.settings.startDay = 1;
+                Settings.settings.latitude = 68;
+                Settings.settings.latitudeTemp = 0;
+                Settings.settings.seasonalTempGap = 0;
+                Settings.settings.RefreshGUI();
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.cycleLength), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.startDay), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.latitude), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.latitudeTemp), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.seasonalTempGap), Settings.settings.enabled == true);
+
                 RestoreKeyframeTimes(GameManager.GetUniStorm());
                 SaveDataManager.reloadPending = true;
             }
@@ -69,7 +84,7 @@ namespace Solstice
         internal static bool Enabled;
         internal static int CycleLength;
         internal static int CycleOffset;
-        internal static float Latitude;
+        internal static int Latitude;
         internal static float LatitudeTemp;
         internal static float SeasonalTempGap;
         internal static float TemperatureOffset; 
@@ -141,9 +156,9 @@ namespace Solstice
             DateTime referenceDateBefore = DateTime.SpecifyKind(new DateTime(2022, 1, 1).AddDays(dayBefore).AddHours(12), DateTimeKind.Utc);
             DateTime referenceDateAfter = DateTime.SpecifyKind(new DateTime(2022, 1, 1).AddDays(dayAfter).AddHours(12), DateTimeKind.Utc);
 
-            SolarTimes solartimes = new SolarTimes(referenceDate, Latitude, 0f);
-            SolarTimes solartimesDayBefore = new SolarTimes(referenceDateBefore, Latitude, 0f);
-            SolarTimes solartimesDayAfter = new SolarTimes(referenceDateAfter, Latitude, 0f);
+            SolarTimes solartimes = new SolarTimes(referenceDate, (float)Latitude, 0f);
+            SolarTimes solartimesDayBefore = new SolarTimes(referenceDateBefore, (float)Latitude, 0f);
+            SolarTimes solartimesDayAfter = new SolarTimes(referenceDateAfter, (float)Latitude, 0f);
 
             //DISPLAY THE NUMBER OF POLAR DAYS/NIGHTS DEPENDING ON LATITUDE
             /*int polarday = 0;

@@ -11,7 +11,7 @@ namespace Solstice
         [Section("Solstice")]
 
         [Name("Enabled")]
-        [Description("If enabled the length of the day will cycle from short to long and back to short.")]
+        [Description("If enabled the length of the day will cycle from short to long and back to short.\n\nSETTINGS CAN ONLY BE CHANGED IN A SANDBOX!")]
         public bool enabled = true;
 
         [Name("Cycle Length")]
@@ -60,6 +60,11 @@ namespace Solstice
 
         protected override void OnChange(FieldInfo field, object? oldValue, object? newValue)
         {
+            if (GameManager.IsMainMenuActive())
+            {
+                enabled = false;
+                RefreshGUI();
+            }
             SetFieldVisible(nameof(cycleLength), Settings.settings.enabled == true);
             SetFieldVisible(nameof(startDay), Settings.settings.enabled == true);
             SetFieldVisible(nameof(latitude), Settings.settings.enabled == true);
@@ -72,6 +77,7 @@ namespace Solstice
             base.OnConfirm();
             Solstice.ApplySettings();
         }
+
     }
 
     internal static class Settings
@@ -83,4 +89,6 @@ namespace Solstice
             settings.AddToModSettings("Solstice");
         }
     }
+
+
 }
