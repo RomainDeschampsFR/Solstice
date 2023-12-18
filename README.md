@@ -35,6 +35,7 @@ Latitude	|	Polar days	|	Polar nights
 78	|	127	|	110
 79	|	132	|	116
 80	|	138	|	122
+
 Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 polar nights in a row.
 
 ![latitude_DayLength](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/73d8a4bd-ac25-41a5-b8fc-f0430b19190d)
