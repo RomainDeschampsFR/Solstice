@@ -1,11 +1,14 @@
 ﻿using HarmonyLib;
 using Il2Cpp;
+using Il2CppParadoxNotion.Services;
 using MelonLoader;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms;
 
 namespace Solstice
 {
@@ -125,31 +128,74 @@ namespace Solstice
     //[HarmonyPatch(typeof(Weather), nameof(Weather.GenerateTempLow))]
     //[HarmonyPatch(typeof(Weather), nameof(Weather.SetTempHigh))]
     //[HarmonyPatch(typeof(Weather), nameof(Weather.SetTempLow))]
-    //[HarmonyPatch(typeof(Weather), nameof(Weather.UpdateUniStormTemperature))]
 
     [HarmonyPatch(typeof(Weather), nameof(Weather.Update))]
     internal class Weather_Update
     {
         internal static void Prefix(Weather __instance)
         {
+            
+            if (Settings.settings.enabledSunBuff)
+            {
+                //MelonLogger.Msg($"{Solstice.playerSunBuff()}");
+                __instance.m_ArtificalTempIncrease = Solstice.playerSunBuff();
+            }
+
             if (!Solstice.Enabled) return;
 
-            if (__instance.m_TempLow != Solstice.TempLow)
+            if (Solstice.TempLow == 0) Solstice.TempLow = __instance.m_TempLow;
+            if (Solstice.TempHigh == 0) Solstice.TempHigh = __instance.m_TempHigh;
+
+            if (Solstice.IsValidScene)
             {
-                GameManager.GetWeatherComponent().GenerateTempLow();
-                __instance.m_TempLow += Solstice.TemperatureOffset;
-                Solstice.TempLow = __instance.m_TempLow;
+                if (__instance.m_TempLow != Solstice.TempLow)
+                {
+                    //MelonLogger.Msg($"TimeOfDay : {GameManager.GetUniStorm().m_NormalizedTime}"); 
+                    //MelonLogger.Msg($"HighTemp : {__instance.m_TempHigh} --- LowTemp : {__instance.m_TempLow}");
+                    //MelonLogger.Msg($"Weather.Update() Solstice_tempHigh : {Solstice.TempHigh} --- Solstice_tempHigh {Solstice.TempLow}");
+                    //average temp of the region
+                    float averageHighTemp = (__instance.m_HighTempMaxCelsius - (__instance.m_HighTempMaxCelsius - __instance.m_HighTempMinCelsius) / 2);
+                    float averageLowTemp = (__instance.m_LowTempMaxCelsius - (__instance.m_LowTempMaxCelsius - __instance.m_LowTempMinCelsius) / 2);
+                    float averageRegionalTemp = (averageHighTemp + averageLowTemp) / 2;
+
+                    //MelonLogger.Msg($"Weather.Update() avgHighTemp : {averageHighTemp} --- avgLowTemp : {averageLowTemp} --- averageRegionalTemp : {averageRegionalTemp}");
+                    //MelonLogger.Msg($"Weather.Update() Solstice_tempHigh : {Solstice.TempHigh} --- Solstice_tempLow {Solstice.TempLow}");
+                    //MelonLogger.Msg($"Weather.Update() Solstice_dailyTempGapRatio : {Solstice.dailyTempGapRatio}");
+
+                    __instance.GenerateTempLow();
+                    //MelonLogger.Msg($"m_TempLow : {__instance.m_TempLow} ");
+                    float lowGapAdjusted = (averageRegionalTemp - __instance.m_TempLow) * Solstice.dailyTempGapRatio;
+                    __instance.m_TempLow = averageRegionalTemp - lowGapAdjusted + Solstice.TemperatureOffset;
+                    Solstice.TempLow = __instance.m_TempLow;
+                    //MelonLogger.Msg($"Weather.Update() m_TempLow : {__instance.m_TempLow} --- m_TempHigh : {__instance.m_TempHigh} --- TemperatureOffset : {Solstice.TemperatureOffset}");
+                }
+                else if (__instance.m_TempHigh != Solstice.TempHigh)
+                {
+                    //MelonLogger.Msg($"TimeOfDay : {GameManager.GetUniStorm().m_NormalizedTime}");
+                    //MelonLogger.Msg($"HighTemp : {__instance.m_TempHigh} --- LowTemp : {__instance.m_TempLow}");
+                    //MelonLogger.Msg($"Weather.Update() Solstice_tempHigh : {Solstice.TempHigh} --- Solstice_tempLow {Solstice.TempLow}");
+                    //average temp of the region
+                    float averageHighTemp = (__instance.m_HighTempMaxCelsius - (__instance.m_HighTempMaxCelsius - __instance.m_HighTempMinCelsius) / 2);
+                    float averageLowTemp = (__instance.m_LowTempMaxCelsius - (__instance.m_LowTempMaxCelsius - __instance.m_LowTempMinCelsius) / 2);
+                    float averageRegionalTemp = (averageHighTemp + averageLowTemp) / 2;
+
+                    //MelonLogger.Msg($"Weather.Update() avgHighTemp : {averageHighTemp} --- avgLowTemp : {averageLowTemp} --- averageRegionalTemp : {averageRegionalTemp}");
+                    //MelonLogger.Msg($"Weather.Update() Solstice_dailyTempGapRatio : {Solstice.dailyTempGapRatio}");
+
+
+                    __instance.GenerateTempHigh();
+                    //MelonLogger.Msg($"m_TempHigh : {__instance.m_TempHigh} ");
+                    float highGapAdjusted = (averageRegionalTemp - __instance.m_TempHigh) * Solstice.dailyTempGapRatio;
+                    __instance.m_TempHigh = averageRegionalTemp - highGapAdjusted + Solstice.TemperatureOffset;
+                    Solstice.TempHigh = __instance.m_TempHigh;
+                    //MelonLogger.Msg($"Weather.Update() m_TempLow : {__instance.m_TempLow} --- m_TempHigh : {__instance.m_TempHigh} --- TemperatureOffset : {Solstice.TemperatureOffset}");
+                }
             }
-            if (__instance.m_TempHigh != Solstice.TempHigh)
-            {
-                GameManager.GetWeatherComponent().GenerateTempHigh();
-                __instance.m_TempHigh += Solstice.TemperatureOffset;
-                Solstice.TempHigh = __instance.m_TempHigh;
-            }
-            //MelonLogger.Msg($"Weather.Update() m_TempLow : {__instance.m_TempLow} --- m_TempHigh : {__instance.m_TempHigh} --- TemperatureOffset : {Solstice.TemperatureOffset}");
         }
     }
 
+
+    //Avoid voice over for time of day transition during polar days/nights
     [HarmonyPatch(typeof(PlayerVoice), nameof(PlayerVoice.Queue), new Type[] { typeof(Il2CppAK.Wwise.Event), typeof(Il2CppVoice.Priority), typeof(Il2CppSystem.Action) })]
     internal class PlayerVoice_PlayDelayedVoiceOver_patch
     {
@@ -163,6 +209,26 @@ namespace Solstice
             if (audioEvent.Name == "Play_TODNight" && (sunset == 24 || sunset == 12)) return false;
             return true;
 
+        }
+    }
+
+    [HarmonyPatch(typeof(ExperienceModeManager), nameof(ExperienceModeManager.GetOutdoorTempDropCelcius))]
+    internal class ExperienceModeManager_GetOutdoorTempDropCelcius
+    {
+        internal static void Postfix(ref float __result, float numDays)
+        {
+            if (!Solstice.Enabled) return;
+
+            if (numDays <= Settings.settings.declineStartDay) __result = 0;
+            else if (numDays >= Settings.settings.declineEndDay) __result = Settings.settings.maxDrop;
+            else
+            {
+                int startDay = Settings.settings.declineStartDay;
+                int endDay = Settings.settings.declineEndDay;
+                float startDrop = 0;
+                float endDrop = Settings.settings.maxDrop;
+                __result = (numDays - startDay) / (endDay - startDay) * (endDrop - startDrop) + startDrop;
+            }
         }
     }
 }

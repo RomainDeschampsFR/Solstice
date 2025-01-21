@@ -31,6 +31,9 @@ namespace Solstice
                     Solstice.Latitude = (int.TryParse(deserializedData[3], out int result3)) ? result3 : 68;
                     Solstice.LatitudeTemp = (float.TryParse(deserializedData[4], out float result4)) ? result4 : 0;
                     Solstice.SeasonalTempGap = (float.TryParse(deserializedData[5], out float result5)) ? result5 : 0;
+                    Solstice.MaxDrop = (float.TryParse(deserializedData[6], out float result6)) ? result6 : 0;
+                    Solstice.DeclineStartDay = (int.TryParse(deserializedData[7], out int result7)) ? result7 : 0;
+                    Solstice.DeclineEndDay = (int.TryParse(deserializedData[8], out int result8)) ? result8 : 0;
 
                     Settings.settings.enabled = Solstice.Enabled;
                     Settings.settings.cycleLength = Solstice.CycleLength;
@@ -38,12 +41,18 @@ namespace Solstice
                     Settings.settings.latitude = Solstice.Latitude;
                     Settings.settings.latitudeTemp = Solstice.LatitudeTemp;
                     Settings.settings.seasonalTempGap = Solstice.SeasonalTempGap;
+                    Settings.settings.maxDrop = Solstice.MaxDrop;
+                    Settings.settings.declineStartDay = Solstice.DeclineStartDay;
+                    Settings.settings.declineEndDay = Solstice.DeclineEndDay;
                     Settings.settings.RefreshGUI();
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.cycleLength), Settings.settings.enabled == true);
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.startDay), Settings.settings.enabled == true);
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.latitude), Settings.settings.enabled == true);
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.latitudeTemp), Settings.settings.enabled == true);
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.seasonalTempGap), Settings.settings.enabled == true);
+                    Settings.settings.SetFieldVisible(nameof(Settings.settings.maxDrop), Settings.settings.enabled == true);
+                    Settings.settings.SetFieldVisible(nameof(Settings.settings.declineStartDay), Settings.settings.enabled == true);
+                    Settings.settings.SetFieldVisible(nameof(Settings.settings.declineEndDay), Settings.settings.enabled == true);
 
                     MelonLogger.Msg($"[SOLSTICE] Parameters Loaded :" +
                                     $"\nEnabled: {Solstice.Enabled}" +
@@ -51,7 +60,10 @@ namespace Solstice
                                     $"\nCycleOffset: {Solstice.CycleOffset}" +
                                     $"\nLatitude: {Solstice.Latitude}" +
                                     $"\nLatitudeTemp: {Solstice.LatitudeTemp}" +
-                                    $"\nSeasonalTempGap: {Solstice.SeasonalTempGap}");
+                                    $"\nSeasonalTempGap: {Solstice.SeasonalTempGap}" +
+                                    $"\nMaxDrop: {Solstice.MaxDrop}" +
+                                    $"\nDeclineStartDay: {Solstice.DeclineStartDay}" +
+                                    $"\nDeclineEndDay: {Solstice.DeclineEndDay}");
                 }
                 reloadPending = false;
 

@@ -4,6 +4,7 @@
 * Meaning the days are shorter and colder during winter, longer and warmer during summer.
 * The greater the latitude, the longer the days in summer and the shorter in winter.
 * **Not compatible with RELENTLESS NIGHT**.
+* **Not compatible with EXTREME DROP TEMPEREATURE (Features already included)**.
 
 ![solstice](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/39e3e8ef-99d8-4c9c-940e-a9344c260c53)
 
@@ -12,6 +13,15 @@
 * To apply the mod you need to be in a particular sandbox, make the changes and confirm (see console)
 * The settings will be loaded afterwards for this specific sandbox
 * You can disable the mod or update its settings in the current sandbox at anytime (try not to spam it, you might end up with some weird consequences (Although those consequences are very edge cases and not game-breaking)
+
+## FEATURES
+
+### WARMTH BONUS IN DIRECT SUNLIGHT (OPTIONAL)
+* When standing in direct sunlight you'll get a warmth bonus
+* The strength of the bonus depends on :
+	* the weather : Clear (6) - Partly Cloudy (3) - Cloudy (0.1) - Light Fog (0.3)
+	* The sun inclinaison (highest at noon, lowest at sunrise/sunset)
+
 
 ### POLAR DAYS & POLAR NIGHTS
 * Above 65° latitude you'll get polar days & polar nights during your run.
@@ -49,22 +59,16 @@ Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 pol
 ![timewidget](https://github.com/RomainDeschampsFR/Solstice/assets/38351288/009c50a1-0ee8-4825-8044-69e244da8897)
 
 ### TEMPERATURE
-* The mod allows you to adjust the seasonal temperature gap if you want to (you can then keep vanilla temperatures which is already a challenge during winter)
+* The mod allows you to adjust the seasonal temperature gap as well as a flat temperature offset
+* Temperature Drop Overtime already implemented in the game can be tweaked as well
+* About the daily temperature gap (cannot be changed):
+  * During the day, the temperature will always start to drop at 18:00 [vanilla = 15:00].
+  * Depending on the day of the year and the chosen latitude, the temperature will start to rise between 00:00 (polar day in summer) and 12:00 (polar night in winter) [Vanilla = 07:00].  
+  * The daily temperature difference will be progressively reduced by the length of the day up to 50% (during polar days/nights).
 
 ### AURORA
 * Every things related to the day/night cycle (temperature, lights, aurora, glimmer fog, ...) is therefore impacted.
 * In the specific case of auroras, their frequencies are increased during equinoxes. In short, vanilla values during Winter/Summer, twice as many during Spring/Autumn.
-
-## USEFUL MOD COMBO
-
-* Extreme Drop Temperature (The Illusion) if you want to adjust or remove the vanilla temp drop over time
-* Cozy Blankets (Jods) and Cozy Cushions (DZ) to get some more warmth bonus
-* Bedroll Tweaker (Cass) to be able to stack bedroll warmth
-* Darker Nights (Xpazeman) for an even harder experience during polar nights
-* Wolf Comes Out at night (Cass) for a weird experience where summer is safer and winter more dangerous
-* Clothing tweaker (Waltz) might be useful although a good balance between winter and summer will be hard to find
-* Sun orientation fix (Cass), I need to have a look at it though)
-* Probably many more... I let you judge.
 
 ## Installation
 

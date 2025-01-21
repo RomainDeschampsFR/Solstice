@@ -12,49 +12,13 @@ using System.Runtime;
 using Innovative.SolarCalculator;
 using UnityEngine.Playables;
 using static Il2CppSystem.Linq.Expressions.Interpreter.CastInstruction.CastInstructionNoT;
+using UnityEngine.UIElements;
+using Il2CppNodeCanvas.Tasks.Actions;
 
 namespace Solstice
 {
     public class Solstice : MelonMod
     {
-        public override void OnInitializeMelon()
-        {
-            Debug.Log($"[{Info.Name}] Version {Info.Version} loaded!");
-            Settings.OnLoad();
-        }
-
-        public override void OnSceneWasInitialized(int buildIndex, string sceneName)
-        {
-            if (sceneName.Contains("MainMenu"))
-            {
-                Enabled = false;
-                CycleLength = 365;
-                CycleOffset = 0;
-                Latitude = 45;
-                LatitudeTemp = 0;
-                SeasonalTempGap = 0;
-                TemperatureOffset = 0;
-
-                //UPDATE MOD SETTINGS UI TO AVOID CONFUSION (CHANGES ONLY ALLOWED IN SANDBOX)
-                Settings.settings.enabled = false;
-                Settings.settings.cycleLength = 365;
-                Settings.settings.startDay = 1;
-                Settings.settings.latitude = 68;
-                Settings.settings.latitudeTemp = 0;
-                Settings.settings.seasonalTempGap = 0;
-                Settings.settings.RefreshGUI();
-                Settings.settings.SetFieldVisible(nameof(Settings.settings.cycleLength), Settings.settings.enabled == true);
-                Settings.settings.SetFieldVisible(nameof(Settings.settings.startDay), Settings.settings.enabled == true);
-                Settings.settings.SetFieldVisible(nameof(Settings.settings.latitude), Settings.settings.enabled == true);
-                Settings.settings.SetFieldVisible(nameof(Settings.settings.latitudeTemp), Settings.settings.enabled == true);
-                Settings.settings.SetFieldVisible(nameof(Settings.settings.seasonalTempGap), Settings.settings.enabled == true);
-
-                RestoreKeyframeTimes(GameManager.GetUniStorm());
-                SaveDataManager.reloadPending = true;
-            }
-            if (sceneName.Contains("SANDBOX")) MelonCoroutines.Start(SaveDataManager.LoadSolsticeParameters());
-        }
-
         internal static readonly Interpolator interpolator = new Interpolator();
 
         internal static TODStateData BlizzardDawnColors = new TODStateData();
@@ -87,12 +51,73 @@ namespace Solstice
         internal static int Latitude;
         internal static float LatitudeTemp;
         internal static float SeasonalTempGap;
-        internal static float TemperatureOffset; 
-        internal static float TempHigh; 
+        internal static float TemperatureOffset;
+        internal static float TempHigh;
         internal static float TempLow;
-
+        internal static float dailyTempGapRatio;
         internal static float[] originalKeyframeTimes = new float[7];
         internal static float originalMasterTimeKeyOffset;
+        internal static bool IsValidScene = false;
+        internal static float MaxDrop;
+        internal static int DeclineStartDay;
+        internal static int DeclineEndDay;
+
+
+        public override void OnInitializeMelon()
+        {
+            Debug.Log($"[{Info.Name}] Version {Info.Version} loaded!");
+            Settings.OnLoad();
+        }
+
+        public override void OnSceneWasInitialized(int buildIndex, string sceneName)
+        {
+
+            IsValidScene = false;
+            //MelonLogger.Msg($"Scene Name : {sceneName}");
+            if (GameManager.IsMainMenuActive())
+            {
+                Enabled = false;
+                CycleLength = 365;
+                CycleOffset = 0;
+                Latitude = 45;
+                LatitudeTemp = 0;
+                SeasonalTempGap = 0;
+                TemperatureOffset = 0;
+
+
+                //UPDATE MOD SETTINGS UI TO AVOID CONFUSION (CHANGES ONLY ALLOWED IN SANDBOX)
+                Settings.settings.enabled = false;
+                Settings.settings.cycleLength = 365;
+                Settings.settings.startDay = 1;
+                Settings.settings.latitude = 68;
+                Settings.settings.latitudeTemp = 0;
+                Settings.settings.seasonalTempGap = 0;
+                Settings.settings.maxDrop = 0;
+                Settings.settings.declineStartDay = 0;
+                Settings.settings.declineEndDay = 0;
+
+                Settings.settings.RefreshGUI();
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.sunStrength), Settings.settings.enabledSunBuff == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.cycleLength), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.startDay), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.latitude), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.latitudeTemp), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.seasonalTempGap), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.maxDrop), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.declineStartDay), Settings.settings.enabled == true);
+                Settings.settings.SetFieldVisible(nameof(Settings.settings.declineEndDay), Settings.settings.enabled == true);
+
+                RestoreKeyframeTimes(GameManager.GetUniStorm());
+                SaveDataManager.reloadPending = true;
+            }
+            else if (sceneName != "Empty" && sceneName != "Boot")
+            {
+                IsValidScene = true;
+                if (!sceneName.Contains("_")) MelonCoroutines.Start(SaveDataManager.LoadSolsticeParameters());
+            }
+        }
+
+
 
         internal static void ApplySettings()
         {
@@ -115,6 +140,9 @@ namespace Solstice
             Latitude = Settings.settings.latitude;
             LatitudeTemp = Settings.settings.latitudeTemp;
             SeasonalTempGap = Settings.settings.seasonalTempGap;
+            MaxDrop = Settings.settings.maxDrop;
+            DeclineStartDay = Settings.settings.declineStartDay;
+            DeclineEndDay = Settings.settings.declineEndDay;
 
             MelonLogger.Msg($"[SOLSTICE] Parameters saved :" +
                             $"\nEnabled : {Enabled}" +
@@ -122,11 +150,16 @@ namespace Solstice
                             $"\nCycleOffSet : {CycleOffset}" +
                             $"\nLatitude : {Latitude}" +
                             $"\nLatitudeTemp : {LatitudeTemp}" +
-                            $"\nSeasonalGap : {SeasonalTempGap}");
+                            $"\nSeasonalGap : {SeasonalTempGap}" +
+                            $"\nMaxDrop : {MaxDrop}" +
+                            $"\nDeclineStartDay : {DeclineStartDay}" +
+                            $"\nDeclineEndDay : {DeclineEndDay}");
 
-            if (SaveDataManager.dataManager != null) SaveDataManager.dataManager.Save($"{Enabled};{CycleLength};{CycleOffset};{Latitude};{LatitudeTemp};{SeasonalTempGap}");
+            if (SaveDataManager.dataManager != null) SaveDataManager.dataManager.Save($"{Enabled};{CycleLength};{CycleOffset};{Latitude};{LatitudeTemp};{SeasonalTempGap};{MaxDrop};{DeclineStartDay};{DeclineEndDay}");
 
             Update(GameManager.GetUniStorm());
+            GameManager.GetWeatherComponent().GenerateTempLow();
+            GameManager.GetWeatherComponent().GenerateTempHigh();
         }
 
         internal static void Init(UniStormWeatherSystem uniStormWeatherSystem)
@@ -338,7 +371,7 @@ namespace Solstice
             GameManager.GetWeatherComponent().m_AuroraActivationWindowStart = (int)Math.Floor(keyframeTimes[4]);
             GameManager.GetWeatherComponent().m_AuroraActivationWindowEnd = (keyframeTimes[0] < 1) ? 0 : (int)Math.Floor(keyframeTimes[0] - 1);
             // The closer to the equinoxes the higher the chance to get an aurora
-            GameManager.GetWeatherComponent().m_AuroraEarlyWindowProbability = 20 - (int)Math.Ceiling(Math.Abs(((solartimes.SolarDeclination.Degrees + 23) / 46) - 0.5f) * 20) ;
+            GameManager.GetWeatherComponent().m_AuroraEarlyWindowProbability = 20 - (int)Math.Ceiling(Math.Abs(((solartimes.SolarDeclination.Degrees + 23) / 46) - 0.5f) * 20);
             GameManager.GetWeatherComponent().m_AuroraLateWindowProbability = 10 - (int)Math.Ceiling(Math.Abs(((solartimes.SolarDeclination.Degrees + 23) / 46) - 0.5f) * 10);
 
             GameManager.GetWeatherComponent().m_ElectrostaticFogActivationWindowStart = GameManager.GetWeatherComponent().m_AuroraActivationWindowEnd;
@@ -346,11 +379,15 @@ namespace Solstice
             GameManager.GetWeatherComponent().m_ElectrostaticFogSelectionWindowStart = GameManager.GetWeatherComponent().m_AuroraActivationWindowEnd;
             GameManager.GetWeatherComponent().m_ElectrostaticFogSelectionWindowEnd = GameManager.GetWeatherComponent().m_AuroraActivationWindowStart;
 
-            //TEMPERATURE
+            //TEMPERATURE CHANGE HOURS
             GameManager.GetWeatherComponent().m_HourWarmingBegins = (int)Math.Floor(keyframeTimes[1]);
-            GameManager.GetWeatherComponent().m_HourCoolingBegins = (int)Math.Floor(keyframeTimes[5]);
+            GameManager.GetWeatherComponent().m_HourCoolingBegins = 18;
 
-            float latitudeTemp = (65 - Latitude) * Settings.settings.latitudeTemp;
+            //DAY LENGTH RATIO (THE HIGHER THE DAY LENGHT, THE HIGHER THE TEMP GAP DURING THE DAY)
+            dailyTempGapRatio = (100 - (Math.Abs(6 - keyframeTimes[1]) * 8.3333f))/100;
+
+            //TEMPERATURE GAP
+            float latitudeTemp = Settings.settings.latitudeTemp;
             float seasonalTempGap = (((solartimes.SolarDeclination.Degrees + 23) / 46) - 0.5f) * Settings.settings.seasonalTempGap;
             TemperatureOffset = latitudeTemp + seasonalTempGap;
 
@@ -366,6 +403,59 @@ namespace Solstice
             }
 
 
+        }
+
+        internal static float playerSunBuff()
+        {
+            bool indoor_test = GameManager.GetWeatherComponent().IsIndoorScene(); //(!GameManager.GetPlayerManagerComponent().m_IndoorSpaceTrigger || !GameManager.GetPlayerManagerComponent().m_IndoorSpaceTrigger.m_UseOutdoorTemperature);
+            if (indoor_test) return 0;
+
+            Transform transform = GameManager.GetUniStorm().m_SunLight.transform;
+            //test if in sunlight.
+            int layerMask = (1 << 8) | (1 << 9) | (1 << 11);
+            RaycastHit hit;
+            if (UnityEngine.Physics.Raycast(GameManager.GetPlayerObject().transform.position + Vector3.up * 0.5f, transform.TransformDirection(Vector3.back), out hit, Mathf.Infinity, layerMask))
+            {
+                //Debug.DrawRay(GameManager.GetPlayerObject().transform.position, transform.TransformDirection(Vector3.back) * hit.distance, Color.yellow);
+                return 0;
+            }
+            else
+            {
+                // Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+                //Debug.Log("Sunlight_transform y:"+ GameManager.GetUniStorm().m_SunLight.transform.forward.y);
+                return getDirectSunWarmth();
+            }
+        }
+
+        internal static float getDirectSunWarmth()
+        {
+            float sunangle = GetCurrentNormSunIncidence();
+            float sunstrength;
+            Weather theWeather = GameManager.GetWeatherComponent();
+            switch (theWeather.GetWeatherStage())
+            {
+                case WeatherStage.Clear:
+                    sunstrength = (float)Settings.settings.sunStrength;
+                    break;
+                case WeatherStage.PartlyCloudy:
+                    sunstrength = (float)Settings.settings.sunStrength/2;
+                    break;
+                case WeatherStage.Cloudy:
+                    sunstrength = (float)Settings.settings.sunStrength/60;
+                    break;
+                case WeatherStage.LightFog:
+                    sunstrength = (float)Settings.settings.sunStrength/20;
+                    break;
+                default:
+                    sunstrength = 0;
+                    break;
+            }
+            return sunangle * sunstrength;// the sun forward vector point down towards the player
+        }
+
+        internal static float GetCurrentNormSunIncidence()
+        {
+            return Mathf.Asin(Mathf.Max(GameManager.GetUniStorm().m_SunLight.transform.forward.y * -1f, 0)) * Mathf.Rad2Deg/90;
         }
 
         // -----------------------------------  UTILITIES  ----------------------------------- //
