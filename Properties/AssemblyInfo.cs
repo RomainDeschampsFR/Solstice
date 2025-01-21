@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 
 //ModName, ModVersion, ModAuthor, and ModNamespace.ModClassInheritingFromMelonMod all need changed.
 
-[assembly: AssemblyTitle("SolsticeLegacy")]
+[assembly: AssemblyTitle("Solstice")]
 [assembly: AssemblyCopyright("MIT Licence")]
 [assembly: AssemblyVersion("3.1.0")]
 [assembly: AssemblyFileVersion("3.1.0")]
-[assembly: MelonInfo(typeof(Solstice.Solstice), "SolsticeLegacy", "3.1.0", "WulfMarius, JoeBuckley, Romain")]
+[assembly: MelonInfo(typeof(Solstice.Solstice), "Solstice", "3.1.0", "WulfMarius, JoeBuckley, Romain")]
 [assembly: MelonGame("Hinterland", "TheLongDark")]

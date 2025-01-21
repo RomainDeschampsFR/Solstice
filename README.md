@@ -80,3 +80,5 @@ Meaning at latitude 72, you'll get every year, 88 polar days in a row and 70 pol
 * Move them **(The 3 of them!)** into the Mods folder in your TLD install directory.
 * ModSettings required
 * ModData required
+
+[![Github All Releases](https://img.shields.io/github/downloads/RomainDeschampsFR/Solstice/total.svg)]()
