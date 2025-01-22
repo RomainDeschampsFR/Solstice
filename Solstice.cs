@@ -388,7 +388,7 @@ namespace Solstice
 
             //TEMPERATURE GAP
             float latitudeTemp = Settings.settings.latitudeTemp;
-            float seasonalTempGap = (((solartimes.SolarDeclination.Degrees + 23) / 46) - 0.5f) * Settings.settings.seasonalTempGap;
+            float seasonalTempGap = ((float)(((float)solartimes.SolarDeclination.Degrees + 23f) / 46f) - 0.5f) * Settings.settings.seasonalTempGap;
             TemperatureOffset = latitudeTemp + seasonalTempGap;
 
         }
@@ -407,13 +407,14 @@ namespace Solstice
 
         internal static float playerSunBuff()
         {
-            bool indoor_test = GameManager.GetWeatherComponent().IsIndoorScene(); //(!GameManager.GetPlayerManagerComponent().m_IndoorSpaceTrigger || !GameManager.GetPlayerManagerComponent().m_IndoorSpaceTrigger.m_UseOutdoorTemperature);
+            bool indoor_test = GameManager.GetWeatherComponent().IsIndoorScene();
             if (indoor_test) return 0;
-
+            if (GameManager.GetUniStorm().m_SunLight.transform == null) return 0;
             Transform transform = GameManager.GetUniStorm().m_SunLight.transform;
             //test if in sunlight.
             int layerMask = (1 << 8) | (1 << 9) | (1 << 11);
             RaycastHit hit;
+            if (GameManager.GetPlayerObject().transform == null) return 0;
             if (UnityEngine.Physics.Raycast(GameManager.GetPlayerObject().transform.position + Vector3.up * 0.5f, transform.TransformDirection(Vector3.back), out hit, Mathf.Infinity, layerMask))
             {
                 //Debug.DrawRay(GameManager.GetPlayerObject().transform.position, transform.TransformDirection(Vector3.back) * hit.distance, Color.yellow);

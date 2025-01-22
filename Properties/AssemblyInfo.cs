@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Solstice")]
 [assembly: AssemblyCopyright("MIT Licence")]
-[assembly: AssemblyVersion("3.1.0")]
-[assembly: AssemblyFileVersion("3.1.0")]
-[assembly: MelonInfo(typeof(Solstice.Solstice), "Solstice", "3.1.0", "WulfMarius, JoeBuckley, Romain")]
+[assembly: AssemblyVersion("3.2.0")]
+[assembly: AssemblyFileVersion("3.2.0")]
+[assembly: MelonInfo(typeof(Solstice.Solstice), "Solstice", "3.2.0", "WulfMarius, JoeBuckley, Romain")]
 [assembly: MelonGame("Hinterland", "TheLongDark")]

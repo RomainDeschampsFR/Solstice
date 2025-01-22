@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Il2Cpp;
 using Il2CppParadoxNotion.Services;
+using Innovative.SolarCalculator;
 using MelonLoader;
 using System.Collections.Generic;
 using System.Reflection;
@@ -134,11 +135,17 @@ namespace Solstice
     {
         internal static void Prefix(Weather __instance)
         {
-            
+
             if (Settings.settings.enabledSunBuff)
             {
-                //MelonLogger.Msg($"{Solstice.playerSunBuff()}");
-                __instance.m_ArtificalTempIncrease = Solstice.playerSunBuff();
+                try
+                {
+                    __instance.m_ArtificalTempIncrease = Solstice.playerSunBuff();
+                }
+                catch
+                {
+                    __instance.m_ArtificalTempIncrease = 0f;
+                }
             }
 
             if (!Solstice.Enabled) return;
