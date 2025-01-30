@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using Il2Cpp;
 using Il2CppParadoxNotion.Services;
+using Il2CppSystem.Net.NetworkInformation;
+using Il2CppTLD.Gameplay;
 using Innovative.SolarCalculator;
 using MelonLoader;
 using System.Collections.Generic;
@@ -28,7 +30,6 @@ namespace Solstice
         internal static bool Prefix(TimeWidget __instance, float angleDegrees)
         {
             if (!Solstice.Enabled) return true;
-
 
             //Make the icon transition during polar days cleaner
             float normalizedTime = GameManager.GetUniStorm().m_NormalizedTime;
@@ -216,26 +217,6 @@ namespace Solstice
             if (audioEvent.Name == "Play_TODNight" && (sunset == 24 || sunset == 12)) return false;
             return true;
 
-        }
-    }
-
-    [HarmonyPatch(typeof(ExperienceModeManager), nameof(ExperienceModeManager.GetOutdoorTempDropCelcius))]
-    internal class ExperienceModeManager_GetOutdoorTempDropCelcius
-    {
-        internal static void Postfix(ref float __result, float numDays)
-        {
-            if (!Solstice.Enabled) return;
-
-            if (numDays <= Settings.settings.declineStartDay) __result = 0;
-            else if (numDays >= Settings.settings.declineEndDay) __result = Settings.settings.maxDrop;
-            else
-            {
-                int startDay = Settings.settings.declineStartDay;
-                int endDay = Settings.settings.declineEndDay;
-                float startDrop = 0;
-                float endDrop = Settings.settings.maxDrop;
-                __result = (numDays - startDay) / (endDay - startDay) * (endDrop - startDrop) + startDrop;
-            }
         }
     }
 }
