@@ -19,7 +19,7 @@ namespace Solstice
     {
         [Name("Sunshine Warmth Bonus : Enabled ")]
         [Description("When enabled the player will benefit from a temperature bonus when in direct sunlight.")]
-        public bool enabledSunBuff = true;
+        public bool enabledSunBuff = false;
 
         [Name("Sun Strength")]
         [Description("With a strength of 10 you can expect a maximum bonus of 6°C (At noon, in summer, at the lowest latitude and with a clear weather)\n" +
@@ -97,7 +97,7 @@ namespace Solstice
         [Name("Decline Ending Day")]
         [Description("The day at which global temperatures do not drop any further.")]
         [Slider(0, 1000, 1001)]
-        public int declineEndDay = 730;
+        public int declineEndDay = 0;
 
 
         protected override void OnChange(FieldInfo field, object? oldValue, object? newValue)

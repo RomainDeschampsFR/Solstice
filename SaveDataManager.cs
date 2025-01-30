@@ -1,7 +1,9 @@
 ﻿using Il2Cpp;
+using Il2CppTLD.Gameplay;
 using MelonLoader;
 using ModData;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -21,7 +23,8 @@ namespace Solstice
 
                 dataManager = new ModDataManager("Solstice", false);
                 string serializedData = dataManager.Load();
-                
+                Solstice.currentExperienceMode = GameManager.GetExperienceModeManagerComponent().GetCurrentExperienceMode();
+
                 if (serializedData != null)
                 {
                     string[] deserializedData = serializedData.Split(";");
@@ -44,6 +47,14 @@ namespace Solstice
                     Settings.settings.maxDrop = Solstice.MaxDrop;
                     Settings.settings.declineStartDay = Solstice.DeclineStartDay;
                     Settings.settings.declineEndDay = Solstice.DeclineEndDay;
+
+                    Solstice.vanillaTempDropCelsiusMax = Solstice.currentExperienceMode.m_OutdoorTempDropCelsiusMax;
+                    Solstice.vanillaTempDropDayStart = Solstice.currentExperienceMode.m_OutdoorTempDropDayStart;
+                    Solstice.vanillaTempDropDayFinal = Solstice.currentExperienceMode.m_OutdoorTempDropDayFinal;
+                    Solstice.currentExperienceMode.m_OutdoorTempDropCelsiusMax = Solstice.MaxDrop;
+                    Solstice.currentExperienceMode.m_OutdoorTempDropDayStart = Solstice.DeclineStartDay;
+                    Solstice.currentExperienceMode.m_OutdoorTempDropDayFinal = Solstice.DeclineEndDay;
+
                     Settings.settings.RefreshGUI();
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.cycleLength), Settings.settings.enabled == true);
                     Settings.settings.SetFieldVisible(nameof(Settings.settings.startDay), Settings.settings.enabled == true);
@@ -64,6 +75,7 @@ namespace Solstice
                                     $"\nMaxDrop: {Solstice.MaxDrop}" +
                                     $"\nDeclineStartDay: {Solstice.DeclineStartDay}" +
                                     $"\nDeclineEndDay: {Solstice.DeclineEndDay}");
+
                 }
                 reloadPending = false;
 

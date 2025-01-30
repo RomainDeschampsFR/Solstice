@@ -14,6 +14,7 @@ using UnityEngine.Playables;
 using static Il2CppSystem.Linq.Expressions.Interpreter.CastInstruction.CastInstructionNoT;
 using UnityEngine.UIElements;
 using Il2CppNodeCanvas.Tasks.Actions;
+using Il2CppTLD.Gameplay;
 
 namespace Solstice
 {
@@ -58,10 +59,15 @@ namespace Solstice
         internal static float[] originalKeyframeTimes = new float[7];
         internal static float originalMasterTimeKeyOffset;
         internal static bool IsValidScene = false;
+
+        internal static ExperienceMode? currentExperienceMode;
+
+        internal static float vanillaTempDropCelsiusMax;
+        internal static int vanillaTempDropDayStart;
+        internal static int vanillaTempDropDayFinal;
         internal static float MaxDrop;
         internal static int DeclineStartDay;
         internal static int DeclineEndDay;
-
 
         public override void OnInitializeMelon()
         {
@@ -96,6 +102,14 @@ namespace Solstice
                 Settings.settings.declineStartDay = 0;
                 Settings.settings.declineEndDay = 0;
 
+                if (currentExperienceMode != null)
+                {
+                    currentExperienceMode.m_OutdoorTempDropCelsiusMax = vanillaTempDropCelsiusMax;
+                    currentExperienceMode.m_OutdoorTempDropDayStart = vanillaTempDropDayStart;
+                    currentExperienceMode.m_OutdoorTempDropDayFinal = vanillaTempDropDayFinal;
+                    currentExperienceMode = null;
+                }
+
                 Settings.settings.RefreshGUI();
                 Settings.settings.SetFieldVisible(nameof(Settings.settings.sunStrength), Settings.settings.enabledSunBuff == true);
                 Settings.settings.SetFieldVisible(nameof(Settings.settings.cycleLength), Settings.settings.enabled == true);
@@ -121,12 +135,7 @@ namespace Solstice
 
         internal static void ApplySettings()
         {
-            if (GameManager.IsMainMenuActive())
-            {
-                MelonLogger.Msg("Setting changes only allowed in a sandbox");
-                return;
-            }
-
+            if (GameManager.IsMainMenuActive()) return;
             Enabled = Settings.settings.enabled;
 
             if (!Enabled)
@@ -143,6 +152,14 @@ namespace Solstice
             MaxDrop = Settings.settings.maxDrop;
             DeclineStartDay = Settings.settings.declineStartDay;
             DeclineEndDay = Settings.settings.declineEndDay;
+
+            if (currentExperienceMode != null)
+            {
+                currentExperienceMode = GameManager.GetExperienceModeManagerComponent().GetCurrentExperienceMode();
+                currentExperienceMode.m_OutdoorTempDropCelsiusMax = MaxDrop;
+                currentExperienceMode.m_OutdoorTempDropDayStart = DeclineStartDay;
+                currentExperienceMode.m_OutdoorTempDropDayFinal = DeclineEndDay;
+            }
 
             MelonLogger.Msg($"[SOLSTICE] Parameters saved :" +
                             $"\nEnabled : {Enabled}" +
