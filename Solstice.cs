@@ -128,6 +128,15 @@ namespace Solstice
             {
                 IsValidScene = true;
                 if (!sceneName.Contains("_")) MelonCoroutines.Start(SaveDataManager.LoadSolsticeParameters());
+
+                // Custom mode refresh values based on preset difficulties everytime a scene is loaded.
+                if (Enabled)
+                {
+                    GameManager.GetExperienceModeManagerComponent().GetCustomExperienceModeDefinition().m_OutdoorTempDropCelsiusMax = Settings.settings.maxDrop;
+                    GameManager.GetExperienceModeManagerComponent().GetCustomExperienceModeDefinition().m_OutdoorTempDropDayFinal = Settings.settings.declineEndDay;
+                    GameManager.GetExperienceModeManagerComponent().GetCustomExperienceModeDefinition().m_OutdoorTempDropDayStart = Settings.settings.declineStartDay;
+                }
+
             }
         }
 
